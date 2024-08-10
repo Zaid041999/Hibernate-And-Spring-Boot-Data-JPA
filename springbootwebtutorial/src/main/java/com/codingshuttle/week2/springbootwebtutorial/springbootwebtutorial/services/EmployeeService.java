@@ -2,6 +2,7 @@ package com.codingshuttle.week2.springbootwebtutorial.springbootwebtutorial.serv
 
 import com.codingshuttle.week2.springbootwebtutorial.springbootwebtutorial.dto.EmployeeDTO;
 import com.codingshuttle.week2.springbootwebtutorial.springbootwebtutorial.entities.EmployeeEntity;
+import com.codingshuttle.week2.springbootwebtutorial.springbootwebtutorial.exceptions.ResourceNotFoundException;
 import com.codingshuttle.week2.springbootwebtutorial.springbootwebtutorial.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.ReflectionUtils;
@@ -55,29 +56,37 @@ public class EmployeeService {
     }
 
     public EmployeeDTO updateEmployeeById(Long employeeId, EmployeeDTO employeeDTO) {
+        //If employee does not present with that id throw exception
+        isExistEmployeeById(employeeId);
+
+
        EmployeeEntity employeeEntity = modelMapper.map(employeeDTO,EmployeeEntity.class);
        employeeEntity.setId(employeeId);
        EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
        return modelMapper.map(savedEmployeeEntity,EmployeeDTO.class);
 
     }
-    public boolean isExistEmployeeById(Long employeeId){
-        return employeeRepository.existsById(employeeId);
+    public  void isExistEmployeeById(Long employeeId){
+
+        //If employee does not present with that id throw exception
+        boolean exists = employeeRepository.existsById(employeeId);
+
+        if(!exists)  throw new ResourceNotFoundException("Employee not found with id :"+employeeId);
+
     }
 
     public boolean deleteEmployeeById(Long employeeId) {
-        boolean exists = isExistEmployeeById(employeeId);
-        if(!exists) return false;
+         isExistEmployeeById(employeeId);
         employeeRepository.deleteById(employeeId);
         return true;
 
     }
 
     public EmployeeDTO updatePartialEmployeeById(Long employeeId, Map<String, Object> updates) {
-        boolean exists = isExistEmployeeById(employeeId);
-        if(!exists) return null;
+        isExistEmployeeById(employeeId);
+
         //Get the employee id
-        EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).get();
+        EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).orElse(null);
         // Iterate over the updates map and update the corresponding fields in the employee entity
         updates.forEach((field, value) -> {
             // Find the field in EmployeeEntity by name
