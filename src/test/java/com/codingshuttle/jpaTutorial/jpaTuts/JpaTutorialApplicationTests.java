@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +22,7 @@ class JpaTutorialApplicationTests {
 
 	@Test
 	void testRepository(){
+
 
 
 		ProductEntity entity = ProductEntity.builder()
@@ -60,16 +60,15 @@ class JpaTutorialApplicationTests {
 //		List<ProductEntity> entities =productRepository.findByTitleContaining("Bis");
 //		System.out.println(entities);
 
-	    List<ProductEntity> entities =productRepository.findByTitleContainingIgnoreCase("veg");
+	    List<ProductEntity> entities =productRepository.findByTitleContainingIgnoreCase("veg",null );
 		System.out.println(entities);
 
 
 	}
 	@Test
 	void getSingleFromRepository(){
-		Optional<ProductEntity> productEntity =productRepository.findByTitleAndPrice("Lay",BigDecimal.valueOf(10.3));
+		Optional<ProductEntity> productEntity =productRepository.findByTitleAndPrice("Lays",BigDecimal.valueOf(10.3));
 		 productEntity.ifPresent(System.out::println);
-
 	}
 
 }

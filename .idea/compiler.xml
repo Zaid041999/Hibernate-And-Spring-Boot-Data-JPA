@@ -8,9 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jpaTuts" />
-        <module name="Hibernate_And_SpringBoot_Data_JPA" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Hibernate_And_SpringBoot_Data_JPA" target="22" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
